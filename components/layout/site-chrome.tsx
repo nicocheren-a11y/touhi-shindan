@@ -24,7 +24,7 @@ export function SiteChrome({ children }: SiteChromeProps) {
         <header className="flex justify-center py-4">
           <Link
             href="/"
-            className="text-lg font-semibold tracking-wide text-stone-700 hover:text-stone-900 transition-colors"
+            className="text-2xl font-bold tracking-wide text-stone-700 hover:text-stone-900 transition-colors"
           >
             逃避診断
           </Link>
