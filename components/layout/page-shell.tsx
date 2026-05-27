@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 /** 全ページ共通の最小幅 + ビューポート比例（md / lg） */
@@ -35,7 +36,19 @@ export function PageShell({
         className={`mx-auto flex min-h-full w-full flex-col px-5 py-10 sm:px-6 sm:py-14 ${widthClass}`}
       >
         <div className={outerCard}>
-          <div className={innerCard}>{children}</div>
+          <div className={innerCard}>
+            {!isLanding && (
+              <div className="mb-6">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors"
+                >
+                  ← トップに戻る
+                </Link>
+              </div>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     </div>
