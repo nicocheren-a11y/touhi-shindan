@@ -253,7 +253,23 @@ export function DriftOrbitBackground() {
 
     for (const spec of ORBITS) {
       const group = new THREE.Group();
+
       group.add(createOrbitLine(spec, 160));
+
+      const ghost = createOrbitLine(
+        { ...spec, opacity: spec.opacity * 0.55, scale: spec.scale * 1.025 },
+        160,
+      );
+      ghost.rotation.z = 0.08;
+      group.add(ghost);
+
+      const inner = createOrbitLine(
+        { ...spec, opacity: spec.opacity * 0.4, scale: spec.scale * 0.975 },
+        120,
+      );
+      inner.rotation.x = 0.1;
+      group.add(inner);
+
       root.add(group);
       orbitGroups.push({ group, spec, breathPhase: spec.phase });
     }
