@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 const DriftOrbitBackground = dynamic(
@@ -19,7 +20,17 @@ export function SiteChrome({ children }: SiteChromeProps) {
   return (
     <>
       <DriftOrbitBackground />
-      <div className="relative z-10 flex min-h-full flex-col">{children}</div>
+      <div className="relative z-10 flex min-h-full flex-col">
+        <header className="flex justify-center py-4">
+          <Link
+            href="/"
+            className="text-lg font-semibold tracking-wide text-stone-700 hover:text-stone-900 transition-colors"
+          >
+            逃避診断
+          </Link>
+        </header>
+        {children}
+      </div>
     </>
   );
 }
