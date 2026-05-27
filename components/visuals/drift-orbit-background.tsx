@@ -110,67 +110,6 @@ const ORBITS: OrbitSpec[] = [
     offsetX: 0.5,
     offsetY: -0.2,
   },
-  {
-    scale: 1.35,
-    opacity: 0.36,
-    color: 0xa8a29e,
-    phase: 4.2,
-    freqA: 6,
-    freqB: 3,
-    freqC: 4,
-    ampX: 0.3,
-    ampY: 0.28,
-    ampZ: 0.45,
-    rotSpeed: [0.00016, 0.00007, 0.00012],
-    layerOffset: -0.35,
-    offsetY: 0.35,
-  },
-  {
-    scale: 1.1,
-    opacity: 0.34,
-    color: 0x6ee7b7,
-    phase: 2.7,
-    freqA: 7,
-    freqB: 5,
-    freqC: 3,
-    ampX: 0.22,
-    ampY: 0.32,
-    ampZ: 0.18,
-    rotSpeed: [0.00009, 0.00017, 0.0001],
-    layerOffset: 0.1,
-    offsetX: -0.25,
-  },
-  {
-    scale: 2.0,
-    opacity: 0.28,
-    color: 0xcbd5e1,
-    phase: 5.1,
-    freqA: 2,
-    freqB: 2,
-    freqC: 5,
-    ampX: 1.1,
-    ampY: 0.35,
-    ampZ: 0.35,
-    rotSpeed: [0.00006, 0.00009, 0.00014],
-    layerOffset: 0.5,
-    offsetX: 0.15,
-    offsetY: -0.35,
-  },
-  {
-    scale: 1.75,
-    opacity: 0.3,
-    color: 0x99f6e4,
-    phase: 3.8,
-    freqA: 4,
-    freqB: 2,
-    freqC: 6,
-    ampX: 0.9,
-    ampY: 0.9,
-    ampZ: 0.2,
-    rotSpeed: [0.00011, 0.00006, 0.00008],
-    layerOffset: -0.45,
-    offsetX: -0.55,
-  },
 ];
 
 function createLissajousPoints(spec: OrbitSpec, segments: number): THREE.Vector3[] {
@@ -291,11 +230,11 @@ export function DriftOrbitBackground() {
     camera.position.set(0, 0, 5.8);
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: false,
       alpha: true,
-      powerPreference: "high-performance",
+      powerPreference: "default",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.style.position = "absolute";
     renderer.domElement.style.inset = "0";
@@ -314,23 +253,7 @@ export function DriftOrbitBackground() {
 
     for (const spec of ORBITS) {
       const group = new THREE.Group();
-
-      group.add(createOrbitLine(spec, 180));
-
-      const ghost = createOrbitLine(
-        { ...spec, opacity: spec.opacity * 0.55, scale: spec.scale * 1.025 },
-        180,
-      );
-      ghost.rotation.z = 0.08;
-      group.add(ghost);
-
-      const inner = createOrbitLine(
-        { ...spec, opacity: spec.opacity * 0.4, scale: spec.scale * 0.975 },
-        140,
-      );
-      inner.rotation.x = 0.1;
-      group.add(inner);
-
+      group.add(createOrbitLine(spec, 100));
       root.add(group);
       orbitGroups.push({ group, spec, breathPhase: spec.phase });
     }
@@ -362,6 +285,8 @@ export function DriftOrbitBackground() {
     root.add(createEllipseRing(1.5, 1.2, 0x78716c, 0.18, 0.55));
 
     let frameId = 0;
+    let lastTime = 0;
+    const FRAME_MS = 1000 / 30; // 30fps
     const start = performance.now();
 
     const resize = () => {
@@ -375,6 +300,11 @@ export function DriftOrbitBackground() {
     window.addEventListener("resize", resize);
 
     const render = (time: number) => {
+      if (time - lastTime < FRAME_MS) {
+        frameId = requestAnimationFrame(render);
+        return;
+      }
+      lastTime = time;
       const t = (time - start) * 0.001;
       const breath = reducedMotion ? 0 : Math.sin(t * 0.55);
 
