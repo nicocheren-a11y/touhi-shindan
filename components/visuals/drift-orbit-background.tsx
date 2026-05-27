@@ -230,11 +230,11 @@ export function DriftOrbitBackground() {
     camera.position.set(0, 0, 5.8);
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: false,
+      antialias: true,
       alpha: true,
-      powerPreference: "default",
+      powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.style.position = "absolute";
     renderer.domElement.style.inset = "0";
@@ -253,7 +253,7 @@ export function DriftOrbitBackground() {
 
     for (const spec of ORBITS) {
       const group = new THREE.Group();
-      group.add(createOrbitLine(spec, 100));
+      group.add(createOrbitLine(spec, 160));
       root.add(group);
       orbitGroups.push({ group, spec, breathPhase: spec.phase });
     }
